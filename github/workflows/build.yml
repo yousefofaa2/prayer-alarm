@@ -16,7 +16,17 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - uses: android-actions/setup-android@v3
+      - name: Download Quran text (bundled inside the app for offline use)
+        run: |
+          mkdir -p app/src/main/assets
+          curl -fL --retry 5 --retry-delay 5 https://api.alquran.cloud/v1/quran/quran-uthmani -o app/src/main/assets/quran.json
+          python3 - <<'PY'
+          import json
+          d = json.load(open('app/src/main/assets/quran.json', encoding='utf-8'))['data']['surahs']
+          assert len(d) == 114, len(d)
+          assert sum(len(s['ayahs']) for s in d) == 6236
+          print('Quran OK: 114 surahs, 6236 ayahs')
+          PY
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.7
@@ -28,4 +38,4 @@ jobs:
         run: |
           gh release create "v${{ github.run_number }}" prayer-alarm.apk \
             --title "منبه الصلاة v${{ github.run_number }}" \
-            --notes "نزّل ملف prayer-alarm.apk وثبّته على تليفون أندرويد."
+            --notes "نزّل ملف prayer-alarm.apk وثبّته على تليفون أندرويد. التطبيق بيشتغل بدون إنترنت."
