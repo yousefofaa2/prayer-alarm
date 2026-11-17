@@ -1,22 +1,17 @@
 # منبه الصلاة (Prayer Alarm)
 
-تطبيق أندرويد بيجيب مواقيت الصلاة حسب موقعك (Aladhan API، طريقة الهيئة المصرية)
-وبيضيف منبهات الصلوات الخمس في تطبيق الساعة الأصلي بالموبايل.
+تطبيق أندرويد بيشتغل **بدون إنترنت** وفيه:
+- مواقيت الصلاة (حساب محلي بطريقة الهيئة المصرية) مع الصلاة القادمة
+- ضبط منبهات الصلوات في تطبيق الساعة الأصلي
+- بوصلة اتجاه القبلة
+- المصحف الشريف كامل للقراءة (114 سورة)
 
-## التشغيل
-1. افتح المجلد في Android Studio واستنى الـ Gradle Sync.
-2. وصّل موبايل أندرويد (أو محاكي) واضغط Run.
-3. اضغط الزرار، وسمح بالموقع.
+## البناء
+الأفضل تبنيه عن طريق GitHub Actions (ملف .github/workflows/build.yml)، وهو بينزّل نص المصحف
+ويتأكد منه (114 سورة / 6236 آية) ويحطه جوه التطبيق ويطلّع ملف APK في صفحة Releases.
 
-## الرفع على GitHub
+لو هتبنيه محليًا في Android Studio، نزّل نص المصحف الأول:
 ```
-git init
-git add .
-git commit -m "Prayer alarm app"
-git branch -M main
-git remote add origin https://github.com/USERNAME/prayer-alarm.git
-git push -u origin main
+mkdir -p app/src/main/assets
+curl -L https://api.alquran.cloud/v1/quran/quran-uthmani -o app/src/main/assets/quran.json
 ```
-
-## ملاحظة
-المنبهات بتتضاف مرة واحدة (مش متكررة) لأن المواقيت بتتغير كل يوم، فاضغط الزرار كل يوم.
